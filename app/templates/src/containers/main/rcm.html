@@ -1,0 +1,49 @@
+<div class="rcm-sticky">
+    <div class="rcm-filter rcm-filter-active">All</div>
+    <div class="rcm-filter">1:1 Call</div>
+</div>
+
+
+<div class="rcm-tabs">
+    {% for x in bookings %}
+    <div class="rcm-tab" onclick="location.href='/payment/'">
+        <div class="rcm-tab-top">
+            <div class="rcm-tab-top1">
+                <div class="rcm-tab-tag">
+                    <div class="rcm-tab-tag-icon" style="padding-top: 2px;"><svg xmlns="http://www.w3.org/2000/svg" style="fill: #44444495" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg></div>
+                    <div class="rcm-tab-tag-label">{{x.tag | default:''}}</div>
+                </div>
+                <div class="rcm-tab-go">
+                    <svg stroke="currentColor" style="fill: none;" stroke-width="1" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" font-size="40" class="sc-arrow" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="m12 16 4-4-4-4"></path></svg>
+                </div>
+            </div>
+            <div class="rcm-tab-top2">
+                {{x.booking_name | default:'Title'}}
+            </div>
+            {% if x.slashed_price %}
+            <div class="rcm-tab-top3">
+                {{x.slashed_price | default:'Subtitle'}}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="rcm-tab-bottom">
+            <div class="rcm-tab-bottom-left">{{x.time | default:'Time'}}</div>
+            <div class="rcm-tab-bottom-right">{{x.price | default:'Free'}}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+    
+
+</div>
+
+
+
+<div class="rcm-about-me">
+    <div class="rcm-am-title">About Me</div>
+    <div class="rcm-am-desc">
+        Hi, myself Kushal Kumar.
+            
+    </div>
+</div>

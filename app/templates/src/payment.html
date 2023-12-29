@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+
+    <link rel="stylesheet" href="{% static 'css/payment/payment.css' %}">
+
+</head>
+<!----------------------------------------------->
+<body>
+
+    <div class="parentContainer">
+
+
+        <div class="pc-cont pc-header">
+            <a class="pc-back" href="/"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="10" viewBox="0 0 320 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></a>
+            <div class="pc-pfp">
+                <img src="https://media.licdn.com/dms/image/D5603AQEnzyb_9VeFqw/profile-displayphoto-shrink_800_800/0/1703170756039?e=1709164800&v=beta&t=OeYwXT5Korq7FuDafVarsFjYGDwefz1artzQ-a8KMJU" alt="">
+            </div>
+            <div class="pc-name">Kushal Kumar Saha</div>
+        </div>
+
+
+        <div class="pc-cont pc-title">
+            <div class="pc-title-left">
+                <div class="pc-title-main">{{meet_type | default:'Quick Chat'}}</div>
+                <div class="pc-title-subtitle">{{meet_length | default:'Video Meeting, 30mins'}}</div>
+            </div>
+            <div class="pc-title-right">{{meet_pay | default:'₹ 500+'}}</div>
+        </div>
+
+
+
+        <div class="pc-cont pc-schedule">
+            <div class="pc-schedule-details">
+                <div class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="fill: #50a688;" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg>
+                </div>
+                <div class="rere">
+                    {{meet_timings | default:'Sat, 30 Dec | 9:30 - 10:00AM (GMT +03:00)'}}
+                </div>
+            </div>
+            <div class="pc-schedule-edit" style="padding-right: 3px;">
+                <a href="{{prev_link | default:'/'}}"><svg xmlns="http://www.w3.org/2000/svg" style="fill: #50a688;scale:.9;" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg></a>
+            </div>
+        </div>
+
+
+        <form action="{% url 'process-payment' %}" method="post">
+            <div class="pc-cont pc-exc" style="padding-top: 25px;">
+                <div class="pc-form-label"><font style="color: red;">*</font> Your name</div>
+                <div class="pc-form-input">
+                    <input type="text" name="customer_name" id="customer_name">
+                </div>
+                <div class="pc-form-input-error"></div>
+            </div>
+
+            <div class="pc-cont">
+                <div class="pc-form-label"><font style="color: red;">*</font> Email</div>
+                <div class="pc-form-input">
+                    <input type="email" name="customer_email" id="customer_email">
+                </div>
+                <div class="pc-form-input-error"></div>
+            </div>
+            
+            <div class="pc-cont">
+                <div class="pc-form-label"><font style="color: red;">*</font> What is the call about?</div>
+                <div class="pc-form-input">
+                    <input type="text" name="customer_call_details" id="customer_call_details">
+                </div>
+            </div>
+
+            <div class="pc-cont">
+                <div class="pc-form-label">Phone number</div>
+                <div class="pc-form-input">
+                    <input type="number" max='9999999999' name="customer_mobile" id="customer_mobile">
+                </div>
+                <div class="pc-form-input-error"></div>
+            </div>
+
+
+            <div class="pc-cont">
+                <div class="pc-form-label">Pay what you like</div>
+                <div class="pc-form-payments">
+                    <div class="pc-form-pay">{{meet_pay_1 | default:'₹ 500'}}</div>
+                    <div class="pc-form-pay">{{meet_pay_2 | default:'₹ 625'}}</div>
+                    <div class="pc-form-pay">{{meet_pay_3 | default:'₹ 938'}}</div>
+                    <div class="pc-form-pay">{{meet_pay_4 | default:'Other'}}</div>
+                </div>
+            </div>
+
+
+            <div class="pc-cont pc-checkbox">
+                <input type="checkbox" name="get_mail_update" id="get_mail_update" checked> Receive booking details over email
+            </div>
+
+
+            <div class="pc-cont pc-footer">
+                <div class="pc-totalPay">₹ 625</div>
+                <div class="pc-submit">Confirm and Pay</div>
+            </div>
+        </form>
+
+
+    </div>
+
+
+    <script>
+        const changeNames = ()=>{
+            if(window.innerWidth<=540){
+                document.querySelector(".pc-submit").textContent = "Pay amount";
+                document.querySelector(".pc-exc").style.paddingTop = "60px";
+                return;
+            }
+            document.querySelector(".pc-submit").textContent = "Confirm and Pay";
+                document.querySelector(".pc-exc").style.paddingTop = "25px";
+        };
+
+        (changeNames)();
+        window.addEventListener("resize", changeNames);
+
+
+    </script>
+</body>
+</html>

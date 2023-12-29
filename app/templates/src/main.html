@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kushal Kumar Saha</title>
+
+    <link rel="stylesheet" href="{% static 'css/main/main.css' %}">
+
+</head>
+<!----------------------------------------------->
+<body>
+
+    <div class="parentContainer">
+
+
+        <div class="lcm">
+            {% include 'src/containers/main/lcm.html' %}
+        </div>
+    
+        <div class="rcm">
+            {% include 'src/containers/main/rcm.html' %}
+        </div>
+
+
+
+    </div>
+</body>
+</html>
