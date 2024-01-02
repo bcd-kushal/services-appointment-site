@@ -26,10 +26,10 @@
 
         <div class="pc-cont pc-title">
             <div class="pc-title-left">
-                <div class="pc-title-main">{{meet_type | default:'Quick Chat'}}</div>
-                <div class="pc-title-subtitle">{{meet_length | default:'Video Meeting, 30mins'}}</div>
+                <div class="pc-title-main">{{booking_name | default:'Quick Chat'}}</div>
+                <div class="pc-title-subtitle">{{booking_details | default:'Video Meeting, 30mins'}}</div>
             </div>
-            <div class="pc-title-right">{{meet_pay | default:'₹ 500+'}}</div>
+            <div class="pc-title-right">{{booking_price | default:'₹ 500+'}}</div>
         </div>
 
 
@@ -40,7 +40,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" style="fill: #50a688;" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192z"/></svg>
                 </div>
                 <div class="rere">
-                    {{meet_timings | default:'Sat, 30 Dec | 9:30 - 10:00AM (GMT +03:00)'}}
+                    {{booking_time | default:'Sat, 30 Dec | 9:30 - 10:00AM (GMT +03:00)'}}
                 </div>
             </div>
             <div class="pc-schedule-edit" style="padding-right: 3px;">
@@ -50,6 +50,7 @@
 
 
         <form action="{% url 'process-payment' %}" method="post">
+            {% csrf_token %}
             <div class="pc-cont pc-exc" style="padding-top: 25px;">
                 <div class="pc-form-label"><font style="color: red;">*</font> Your name</div>
                 <div class="pc-form-input">
@@ -82,13 +83,21 @@
             </div>
 
 
+
+            <!-- HIDDEN PAYMENT INPUT FIELD ---------------------------------->
+            <div class="" style="display: none;">
+                <input type="number" name="pay_amount" id="pay_amount">
+            </div>
+            <!---------------------------------------------------------------->
+
+
+
             <div class="pc-cont">
                 <div class="pc-form-label">Pay what you like</div>
                 <div class="pc-form-payments">
-                    <div class="pc-form-pay">{{meet_pay_1 | default:'₹ 500'}}</div>
-                    <div class="pc-form-pay">{{meet_pay_2 | default:'₹ 625'}}</div>
-                    <div class="pc-form-pay">{{meet_pay_3 | default:'₹ 938'}}</div>
-                    <div class="pc-form-pay">{{meet_pay_4 | default:'Other'}}</div>
+                    {% for amount in prices %}
+                    <div class="pc-form-pay">{{amount | default:'₹ 500'}}</div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -99,8 +108,8 @@
 
 
             <div class="pc-cont pc-footer">
-                <div class="pc-totalPay">₹ 625</div>
-                <div class="pc-submit">Confirm and Pay</div>
+                <div class="pc-totalPay">{{booking_price | default:''}}</div>
+                <button type="submit" class="pc-submit">Confirm and Pay</button>
             </div>
         </form>
 
@@ -122,6 +131,29 @@
         (changeNames)();
         window.addEventListener("resize", changeNames);
 
+
+        /* AMOUNT SELECTION BUTTONS */
+        let PREV_SELECTION_AMOUNT = "";
+        let AMOUNT = document.getElementById("pay_amount");
+
+        const amounts = document.querySelectorAll(".pc-form-pay");
+        amounts.forEach(amount => amount.addEventListener("click", () => {
+            if(PREV_SELECTION_AMOUNT!=""){
+                PREV_SELECTION_AMOUNT.style.color = "black";
+                PREV_SELECTION_AMOUNT.style.fontWeight = "normal";
+                PREV_SELECTION_AMOUNT.style.background = "transparent";
+                PREV_SELECTION_AMOUNT.style.borderColor = "#68686880";
+            }
+
+            amount.style.color = "#fff";
+            amount.style.fontWeight = "990";
+            amount.style.borderColor = "#26775b";
+            amount.style.background = "#26775b";
+
+            AMOUNT.value = parseInt(amount.textContent);
+
+            PREV_SELECTION_AMOUNT = amount;
+        }));
 
     </script>
 </body>
