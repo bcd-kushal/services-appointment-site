@@ -1,1 +1,250 @@
-PICK DATE
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book slot</title>
+
+    <link rel="stylesheet" href="{% static 'css/datepick/datepick.css' %}">
+
+</head>
+<!----------------------------------------------->
+<body>
+
+    <div class="parentContainer">
+
+        <div class="dp-box dp-base-details" style="overflow: hidden;">
+            <div class="dp-base-details-name-area">
+                <div class="dp-back-row">
+                    <div class="dp-back">
+                        <a href="/"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="common-back-btn" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></a>
+                    </div>
+                    <div class="dp-name">Kushal Kumar Saha</div>
+                </div>
+
+                <div class="dp-title-row">
+                    <div class="dp-title">{{booking_name | default:'Quick chat'}}</div>
+                    <div class="dp-image">
+                        <img src="https://media.licdn.com/dms/image/D5603AQEnzyb_9VeFqw/profile-displayphoto-shrink_800_800/0/1703170756039?e=1709164800&v=beta&t=OeYwXT5Korq7FuDafVarsFjYGDwefz1artzQ-a8KMJU" alt="">
+                    </div>
+                </div>
+                
+            </div>
+
+
+            <div class="dp-base-details-row">
+                <div class="dp-price-tab">
+                    <div class="dp-price">{{booking_price | default:'₹ 500+'}}</div>
+                </div>
+                <div class="dp-time-tab">
+                    <div class="dp-calendar-icon">
+                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="tag-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    </div>
+                    <div class="dp-time">{{booking_duration | default:'30 mins meeting'}}</div>
+                </div>
+            </div>
+
+
+            <div class="dp-base-details-extras">
+                 {{booking_desc}}
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <div class="dp-box dp-date-select">
+            <div class="dp-date-date">
+                <div class="dp-date-title">Pick a date</div>
+                <div class="dp-date-dates">
+                    
+                    {% for date in available_dates %}
+                    <div class="dp-date-square">
+                        <div class="date-day">{{date.day}}</div>
+                        <div class="date-date">{{date.date}}</div>
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+
+
+            <div class="dp-date-time">
+                <div class="dp-date-title">Pick a time</div>
+                <div class="dp-date-times">
+                    
+                    {% for timeslot in available_timeslots %}
+                    <div class="dp-date-select-time">{{timeslot}}</div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+
+
+            <form action="/payment/" class="PayForm" method="post" style="display: flex;align-items: center;justify-content: center;">
+                {% csrf_token %}
+                <input type="text" name="selected_date" id="selected_date" style="display: none;">
+                <input type="text" name="selected_time" id="selected_time" style="display: none;">
+                <input type="number" name="booking_id" id="booking_id" style="display: none;">
+                <button type="submit" class="dp-date-confirm" style="width: 100%;" onclick="return eligibilityToProceed()">Confirm details</button>
+            </form>
+        </div>
+
+
+
+
+
+
+
+
+        <div class="dp-box dp-others">
+            <div class="dp-others-title">More Offerings</div>
+            <div class="dp-others-row">
+                
+
+                {% for x in bookings %}
+                <div class="dp-other-link-box">
+                    <div class="dp-other-link-box-left">
+                        <div class="dp-other-link-box-title">{{x.booking_name}}</div>
+                        <div class="dp-other-link-box-subtitle">
+                            <div class="yesss">{{x.duration | default:'30 mins'}}</div>, <div class="noooo">{{x.type | default:'Video Meeting'}}</div>
+                        </div>
+                    </div>
+                    <div class="dp-other-link-box-right">
+                        <div class="dp-other-link-box-go">
+                            <svg stroke="#fff" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" font-size="16" color="#fff" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="color: rgb(255, 255, 255);"><line style="fill: #fff;" x1="7" y1="17" x2="17" y2="7"></line><polyline  points="7 7 17 7 17 17"></polyline></svg>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        const dates = document.getElementsByClassName("dp-date-square");
+        const times = document.getElementsByClassName("dp-date-select-time");
+
+        const total_dates = dates.length;
+        const total_times = times.length;
+
+        let SELECTED_DATE = "";
+        let SELECTED_TIME = "";
+
+        let PREV_DATE = "";
+        let PREV_TIME = "";
+
+        let ELIGIBLE_TO_PROCEED = {
+            DATE: false,
+            TIME: false
+        };
+
+        document.getElementById("booking_id").value = window.location.href.substring(window.location.href.substring(0,window.location.href.length-1).lastIndexOf('/')+1,window.location.href.length-1)
+
+
+        /* create a custom JS form field and send that using fetch with POST type */
+        /* function postDateTimeData(){
+            const header = {
+                "date": SELECTED_DATE,
+                "time": SELECTED_TIME
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: 'http://127.0.0.1:8083/payment/',
+                contentType: 'application/json',
+                data: JSON.stringify(header),
+                success: function(response) {
+                    window.location.href = 'http://127.0.0.1:8083/payment/'
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+
+
+        } */
+
+
+        //DATE SELECT
+        document.querySelectorAll(".dp-date-square").forEach( date => date.addEventListener("click", () => {
+            if(PREV_DATE!=""){
+                PREV_DATE.style.border = ".8px solid #33333335";
+                PREV_DATE.style.fontWeight = "normal";
+            }
+
+            date.style.border = "2px solid black";
+            date.style.fontWeight = "990";
+
+            SELECTED_DATE = date.getElementsByClassName("date-date")[0].textContent + ", " + date.getElementsByClassName("date-day")[0].textContent;
+            document.querySelector("#selected_date").value = SELECTED_DATE;
+            ELIGIBLE_TO_PROCEED.DATE = true;
+
+            PREV_DATE = date;
+        }));
+
+
+
+        //TIME SELECT
+        document.querySelectorAll(".dp-date-select-time").forEach( time => time.addEventListener("click", () => {
+            if(PREV_TIME!=""){
+                PREV_TIME.style.border = ".8px solid #33333335";
+                PREV_TIME.style.fontWeight = "normal";
+            }
+
+            time.style.border = "2px solid black";
+            time.style.fontWeight = "990";
+
+            SELECTED_TIME = time.textContent;
+            document.querySelector("#selected_time").value = SELECTED_TIME;
+            ELIGIBLE_TO_PROCEED.TIME = true;
+
+            PREV_TIME = time;
+        }));
+
+
+
+
+        //CONFIRM BUTTON
+        /* document.querySelector(".dp-date-confirm").addEventListener("click", () => {
+            if(!(ELIGIBLE_TO_PROCEED.DATE & ELIGIBLE_TO_PROCEED.TIME)){
+                alert("Select a time and date first.");
+                return;
+            }
+
+            postDateTimeData();
+        }) */
+
+        $('.PayForm').submit((e) => {
+            if(!(ELIGIBLE_TO_PROCEED.DATE & ELIGIBLE_TO_PROCEED.TIME)){
+                e.preventDefault();
+                alert("Select a date and time for the booking to proceed further.");
+            }
+        })
+
+
+
+
+    </script>
+
+
+</body>
+</html>
