@@ -291,8 +291,16 @@ input[type="number"]::-webkit-outer-spin-button {
     letter-spacing: .2px;
     padding: 13px 22px;
     border-radius: 10px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    text-decoration: none;
 }
 
+.pc-submit:hover{
+    scale: .97;
+    font-weight: 1.03rem;
+}
 
 
 @media (max-width: 540px){
