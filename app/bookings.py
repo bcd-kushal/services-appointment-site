@@ -178,7 +178,7 @@ from pymongo.server_api import ServerApi
 
 from datetime import datetime
 
-ATLAS_URI = "mongodb+srv://naveen:Z7RHvWPN4orjL74y@edtech.qdjcop3.mongodb.net/?retryWrites=true&w=majority"
+ATLAS_URI = "MONGODB_URI"
 
 
 def add_new_booking(name:str="",email:str="",mobile:int=0,amount:int=0,about:str="",payment_status:bool=False,recieve_updates:bool=True,meeting:dict={}):
