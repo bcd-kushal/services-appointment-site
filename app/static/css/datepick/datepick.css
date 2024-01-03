@@ -436,6 +436,9 @@ body{
     border-radius: 0 0 25px 25px;
 }
 
+.time-hide{
+    display: none !important;
+}
 
 
 @media (max-width: 650px){
