@@ -84,6 +84,18 @@
                     {% for timeslot in available_timeslots %}
                     <div class="dp-date-select-time">{{timeslot}}</div>
                     {% endfor %}
+
+                    
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
+                    <div class="dp-date-select-time time-hide"></div>
                     
                 </div>
             </div>
@@ -111,7 +123,7 @@
                 
 
                 {% for x in bookings %}
-                <div class="dp-other-link-box">
+                <div class="dp-other-link-box" onclick="location.href='/date-pick/{{x.index}}'" >
                     <div class="dp-other-link-box-left">
                         <div class="dp-other-link-box-title">{{x.booking_name}}</div>
                         <div class="dp-other-link-box-subtitle">
@@ -159,33 +171,13 @@
 
         document.getElementById("booking_id").value = window.location.href.substring(window.location.href.substring(0,window.location.href.length-1).lastIndexOf('/')+1,window.location.href.length-1)
 
-
-        /* create a custom JS form field and send that using fetch with POST type */
-        /* function postDateTimeData(){
-            const header = {
-                "date": SELECTED_DATE,
-                "time": SELECTED_TIME
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: 'http://127.0.0.1:8083/payment/',
-                contentType: 'application/json',
-                data: JSON.stringify(header),
-                success: function(response) {
-                    window.location.href = 'http://127.0.0.1:8083/payment/'
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                }
-            });
-
-
-        } */
+        const TIMESLOTS = {{all_timeslots|safe}};
 
 
         //DATE SELECT
         document.querySelectorAll(".dp-date-square").forEach( date => date.addEventListener("click", () => {
+
+            // UPDATE SELECTED DATES =============================
             if(PREV_DATE!=""){
                 PREV_DATE.style.border = ".8px solid #33333335";
                 PREV_DATE.style.fontWeight = "normal";
@@ -199,6 +191,47 @@
             ELIGIBLE_TO_PROCEED.DATE = true;
 
             PREV_DATE = date;
+
+
+            
+            // UPDATE TIME SLOTS FOR THAT DATE =============================
+            const date_value = date.getElementsByClassName("date-date")[0].textContent;
+            //update dates buttons here
+
+            /* <div class="dp-date-times">
+                    
+                    {% for timeslot in available_timeslots %}
+                    <div class="dp-date-select-time">{{timeslot}}</div>
+                    {% endfor %}
+                    
+                </div> */
+
+            const timeBox = document.querySelector(".dp-date-times");
+            //update with new time boxes on click
+            if(timeBox){
+
+                //clear boxes first
+                // timeBox.innerHTML = "";
+
+                const times = TIMESLOTS[date_value];
+                const curr_times = document.getElementsByClassName("dp-date-select-time");
+                const n = Math.max(times.length, curr_times.length);
+
+                for(let i=0; i<n; i++){
+
+                    if(i >= times.length){
+                        curr_times[i].textContent = "";
+                        curr_times[i].classList.add("time-hide");
+                        continue;
+                    }
+
+                    curr_times[i].textContent = times[i];
+                    curr_times[i].classList.remove("time-hide");
+
+                }
+            }
+
+            times = document.getElementsByClassName("dp-date-select-time");
         }));
 
 
@@ -242,6 +275,14 @@
 
 
 
+
+
+
+        // DYNAMICALLY CHANGE TIME SLOTS BASED ON DATE CLICKS =======================
+
+
+
+        
 
     </script>
 

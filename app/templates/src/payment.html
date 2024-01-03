@@ -56,7 +56,7 @@
                 <div class="pc-form-input">
                     <input type="text" name="customer_name" id="customer_name">
                 </div>
-                <div class="pc-form-input-error"></div>
+                <div class="pc-form-input-error error-name"></div>
             </div>
 
             <div class="pc-cont">
@@ -64,10 +64,10 @@
                 <div class="pc-form-input">
                     <input type="email" name="customer_email" id="customer_email">
                 </div>
-                <div class="pc-form-input-error"></div>
+                <div class="pc-form-input-error error-email"></div>
             </div>
             
-            <div class="pc-cont">
+            <div class="pc-cont" style="margin-bottom: 12px;">
                 <div class="pc-form-label"><font style="color: red;">*</font> What is the call about?</div>
                 <div class="pc-form-input">
                     <input type="text" name="customer_call_details" id="customer_call_details">
@@ -79,14 +79,18 @@
                 <div class="pc-form-input">
                     <input type="number" max='9999999999' name="customer_mobile" id="customer_mobile">
                 </div>
-                <div class="pc-form-input-error"></div>
+                <div class="pc-form-input-error error-mobile"></div>
             </div>
 
 
 
             <!-- HIDDEN PAYMENT INPUT FIELD ---------------------------------->
             <div class="" style="display: none;">
-                <input type="number" name="pay_amount" id="pay_amount">
+                <input type="number" name="pay_amount" id="pay_amount" value="0">
+                <input type="text" name="meet_type" id="meet_type">
+                <input type="text" name="meet_date" id="meet_date">
+                <input type="text" name="meet_length" id="meet_length">
+                <input type="text" name="meet_time" id="meet_time">
             </div>
             <!---------------------------------------------------------------->
 
@@ -109,7 +113,10 @@
 
             <div class="pc-cont pc-footer">
                 <div class="pc-totalPay">{{booking_price | default:''}}</div>
-                <button type="submit" class="pc-submit">Confirm and Pay</button>
+                
+                <button type="submit" class="pc-submit" onclick="return submitCheck()">Confirm and Pay</button>
+
+                
             </div>
         </form>
 
@@ -117,7 +124,12 @@
     </div>
 
 
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+
+
+        const FINAL_PRICE = document.querySelector(".pc-totalPay");
+
         const changeNames = ()=>{
             if(window.innerWidth<=540){
                 document.querySelector(".pc-submit").textContent = "Pay amount";
@@ -132,7 +144,7 @@
         window.addEventListener("resize", changeNames);
 
 
-        /* AMOUNT SELECTION BUTTONS */
+        /* AMOUNT SELECTION BUTTONS =========================================*/
         let PREV_SELECTION_AMOUNT = "";
         let AMOUNT = document.getElementById("pay_amount");
 
@@ -150,10 +162,105 @@
             amount.style.borderColor = "#26775b";
             amount.style.background = "#26775b";
 
-            AMOUNT.value = parseInt(amount.textContent);
+            AMOUNT.value = parseInt(amount.textContent.substring(2));
+            FINAL_PRICE.textContent = "₹ " + AMOUNT.value;
 
             PREV_SELECTION_AMOUNT = amount;
         }));
+
+
+        (() => {
+                const x = document.getElementsByClassName("pc-form-pay");
+                const k = (x.length>=2)? 1:0;
+            
+                x[k].style.color = "#fff";
+                x[k].style.fontWeight = "990";
+                x[k].style.borderColor = "#26775b";
+                x[k].style.background = "#26775b";
+
+                AMOUNT.value = parseInt(x[k].textContent.substring(2));
+                FINAL_PRICE.textContent = "₹ " + AMOUNT.value;
+                PREV_SELECTION_AMOUNT = x[k];
+            } 
+        )();
+
+
+
+        // FORM SUBMIT =====================================================
+        function submitCheck() {
+            
+            document.querySelector("#meet_time").value = "{{meet_time}}";
+            document.querySelector("#meet_date").value = "{{meet_date}}";
+            document.querySelector("#meet_length").value = "{{meet_length}}";
+            document.querySelector("#meet_type").value = "{{booking_name}}";
+
+
+            const NAME = document.querySelector("#customer_name");
+            const EMAIL = document.querySelector("#customer_email");
+            const ABOUT = document.querySelector("#customer_call_details");
+            const MOBILE = document.querySelector("#customer_mobile");
+            const PRICE = AMOUNT.value;
+
+
+            const errName = document.querySelector(".error-name").textContent;
+            const errEmail = document.querySelector(".error-email").textContent;
+            const errMobile = document.querySelector(".error-mobile").textContent;
+
+
+            if(errName == "" && errEmail == "" && errMobile == "" && !(NAME=="" || EMAIL=="" || ABOUT=="" || PRICE=="")){
+
+            }
+            else {
+                alert("Properly fill all required form data.");
+                return false;
+            }
+
+            return true;
+
+        }
+
+
+
+
+        // FORM VALIDATION =======================================================
+
+        const SUBMIT_BTN = document.querySelector(".pc-submit");
+
+        // firstly the mobile
+        document.querySelector("#customer_mobile").addEventListener("keyup", () => {
+            if(document.querySelector("#customer_mobile").value.length>10){
+                document.querySelector(".error-mobile").textContent = "Length can't exceed 10";
+            }
+            else{
+                document.querySelector(".error-mobile").textContent = "";
+            }
+        });
+
+
+        // name check
+        document.querySelector("#customer_name").addEventListener("keyup", () => {
+            const RE = /^[a-zA-Z\s]+$/;
+            if(RE.test(document.querySelector("#customer_name").value)){
+                document.querySelector(".error-name").textContent = "";
+            }
+            else{
+                document.querySelector(".error-name").textContent = "Malformed name not allowed";
+            }
+        });
+
+
+        // email check
+        document.querySelector("#customer_email").addEventListener("keyup", () => {
+            const RE = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if(RE.test(document.querySelector("#customer_email").value)){
+                document.querySelector(".error-email").textContent = "";
+            }
+            else{
+                document.querySelector(".error-email").textContent = "Invalid email format";
+            }
+        });
+
+
 
     </script>
 </body>
