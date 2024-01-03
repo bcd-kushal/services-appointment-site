@@ -173,6 +173,60 @@ def target_booking(id:int=0):
 #===============================================================================
 
 
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
+from datetime import datetime
+
+ATLAS_URI = "mongodb+srv://naveen:Z7RHvWPN4orjL74y@edtech.qdjcop3.mongodb.net/?retryWrites=true&w=majority"
+
+
+def add_new_booking(name:str="",email:str="",mobile:int=0,amount:int=0,about:str="",payment_status:bool=False,recieve_updates:bool=True,meeting:dict={}):
+    
+    mongo_client = MongoClient(ATLAS_URI,server_api = ServerApi('1'))
+    
+    atlas_db = mongo_client.get_database("booking_site")
+    data = atlas_db.confirmed_bookings
+
+    DATE_RN = datetime.now().strftime('%d-%m-%Y')
+    TIME_RN = datetime.now().strftime('%H:%M:%S.%f')
+
+    if recieve_updates == None:
+        recieve_updates = 'off'
+
+
+    NEW_BOOKING = {
+        "name": name,
+        "amount": amount,
+        "email": email,
+        "payment": {
+            "date": DATE_RN,
+            "time": TIME_RN,
+            "paid": payment_status
+        },
+        "meeting": {
+            "type": meeting['type'],
+            "date": meeting['date'],
+            "time": meeting['time'],
+            "length": meeting['length'],
+            "desc": about
+        },
+        "recieve_updates": recieve_updates
+    }
+
+
+    if(len(str(mobile))==10):
+        NEW_BOOKING["mobile"] = mobile
+
+    print(f"\n\n\nNEW BOOKING = {NEW_BOOKING}\n\n")
+
+    result = data.insert_one(NEW_BOOKING)
+    
+
+
+
+
+
 
 def get_booking_types():
     return [
