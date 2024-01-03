@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;700&family=Outfit:wght@300;700&display=swap');
+
+        ::-webkit-scrollbar{ display: none; }
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', 'Josefin Sans';
+            transition: .5s;
+            color: #000;
+        }
+
+        html{
+            overflow-x: hidden;
+        }
+
+        body{
+            min-width: 100vw;
+            min-height: 100vh;
+            padding: 0;
+            background: #9b8bf8;
+            font-size: .8em;
+        }
+
+        .parentContainer{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            border-radius: 25px;
+            font-size: 1.3rem;
+            background: #fff;
+        }
+
+        a{
+            outline: none;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 20px;
+            background: #000;
+            color: #fff;
+            font-weight: 990;
+            text-decoration: none;
+            font-size: .8rem;
+            margin-top: 18px;
+            cursor: pointer;
+        }
+
+        a:hover{
+            padding: 12px 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="parentContainer">
+        <div class="icon">
+            {{svg|safe | default:''}}
+        </div>
+        <div class="message" style="color: {{msg_color | default:'green'}};">{{message | default:'Payment Successful'}}</div>
+        <a href="{{link | default:'/'}}">{{link_msg | default:'Go Home'}}</a>
+    </div>
+    {% if payment %}
+                    
+                <form action="/rp/success/" method="post">
+                <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key= "rzp_test_i2Olh4B1BnBa6y"
+                    data-amount= "{{ payment.amount }}"
+                    data-currency= "INR"
+                    data-order_id= "{{ payment.id }}"
+                    data-buttontext="Pay with Razorpay"
+                    data-name= "The RK Group"
+                    data-description= "Test Transaction"
+                    data-prefill.name= "Kushal Kumar"
+                    data-prefill.email= "am.kushal02@gmail.com"
+                    data-prefill.contact= "9123686897"
+                    data-theme.color= "{{ theme }}"
+                ></script>
+
+
+                <input type="hidden" name="hidden" custom="hidden Element">
+                </form>
+    {% endif %}
+</body>
+</html>
